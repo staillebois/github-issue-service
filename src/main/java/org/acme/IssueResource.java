@@ -27,4 +27,17 @@ public class IssueResource {
             return Response.serverError().entity("Error: " + e.getMessage()).build();
         }
     }
+
+    @POST
+    @Path("/pages")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPageCount(IssueRequest request) {
+        try {
+            PageCountResponse result = issueService.getIssuePageCount(request);
+            return Response.ok(result).build();
+        } catch (IOException e) {
+            return Response.serverError().entity("Error: " + e.getMessage()).build();
+        }
+    }
 }

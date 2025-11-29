@@ -20,26 +20,28 @@ The service will start on `http://localhost:8080`.
 
 ## REST API
 
-The service exposes a REST endpoint to fetch issues.
+### Fetch Issues
 
 **Endpoint:** `POST /api/issues/fetch`
 **Content-Type:** `application/json`
 
-### Request Body
+#### Request Body
 
 ```json
 {
   "repository": "quarkusio/quarkus",
-  "count": 5,
+  "page": 1,
+  "size": 5,
   "token": "YOUR_GITHUB_TOKEN" 
 }
 ```
 
 - `repository`: The GitHub repository in `owner/repo` format (required).
-- `count`: The number of issues to fetch (required).
+- `page`: The page number to fetch (optional, default 1).
+- `size`: The number of issues per page (optional, default 10).
 - `token`: Your GitHub Personal Access Token (optional).
 
-### Response
+#### Response
 
 The response is a JSON array of issues.
 
@@ -62,14 +64,52 @@ The response is a JSON array of issues.
 ]
 ```
 
-### Example
+#### Example
 
 ```bash
 curl -X POST http://localhost:8080/api/issues/fetch \
   -H "Content-Type: application/json" \
   -d '{
     "repository": "quarkusio/quarkus",
-    "count": 2
+    "page": 1,
+    "size": 2
+  }'
+```
+
+### Get Page Count
+
+**Endpoint:** `POST /api/issues/pages`
+**Content-Type:** `application/json`
+
+#### Request Body
+
+```json
+{
+  "repository": "quarkusio/quarkus",
+  "size": 10
+}
+```
+
+- `repository`: The GitHub repository in `owner/repo` format (required).
+- `size`: The number of issues per page (optional, default 10).
+
+#### Response
+
+```json
+{
+  "pages": 12,
+  "totalIssues": 115
+}
+```
+
+#### Example
+
+```bash
+curl -X POST http://localhost:8080/api/issues/pages \
+  -H "Content-Type: application/json" \
+  -d '{
+    "repository": "quarkusio/quarkus",
+    "size": 10
   }'
 ```
 
@@ -84,7 +124,18 @@ Fetches issues from a GitHub repository and returns them as a JSON string.
 **Arguments:**
 
 - `repository` (string): The GitHub repository in `owner/repo` format.
-- `count` (int): The number of issues to fetch.
+- `repository` (string): The GitHub repository in `owner/repo` format.
+- `page` (int): The page number to fetch (default 1).
+- `size` (int): The number of issues per page (default 10).
+
+### Tool: `getIssuePageCount`
+
+Get the total number of pages of issues for a repository.
+
+**Arguments:**
+
+- `repository` (string): The GitHub repository in `owner/repo` format.
+- `size` (int): The number of issues per page (default 10).
 
 **Usage:**
 
