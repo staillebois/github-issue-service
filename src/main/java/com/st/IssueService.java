@@ -1,12 +1,13 @@
 package com.st;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
 import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHIssueComment;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,8 +15,11 @@ import java.util.List;
 @ApplicationScoped
 public class IssueService {
 
+    @Inject
+    GitHubClientFactory gitHubClientFactory;
+
     public List<IssueResponse> fetchIssues(IssueRequest request) throws IOException {
-        GitHub client = getGitHubClient(request.token);
+        GitHub client = gitHubClientFactory.createClient(request.token);
 
         GHRepository repo = client.getRepository(request.repository);
         Iterable<GHIssue> issues = repo.queryIssues().state(GHIssueState.OPEN).list().withPageSize(request.size);
@@ -49,19 +53,11 @@ public class IssueService {
     }
 
     public PageCountResponse getIssuePageCount(IssueRequest request) throws IOException {
-        GitHub client = getGitHubClient(request.token);
+        GitHub client = gitHubClientFactory.createClient(request.token);
         GHRepository repo = client.getRepository(request.repository);
         int totalIssues = repo.getOpenIssueCount();
         int pages = (int) Math.ceil((double) totalIssues / request.size);
         return new PageCountResponse(pages, totalIssues);
-    }
-
-    private GitHub getGitHubClient(String token) throws IOException {
-        if (token != null && !token.isBlank()) {
-            return new GitHubBuilder().withOAuthToken(token).build();
-        } else {
-            return GitHubBuilder.fromEnvironment().build();
-        }
     }
 
     private IssueResponse mapToResponse(GHIssue issue) throws IOException {
