@@ -1,4 +1,4 @@
-package org.acme;
+package com.st;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import org.kohsuke.github.GHIssue;

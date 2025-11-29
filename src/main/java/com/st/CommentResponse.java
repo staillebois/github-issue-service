@@ -1,4 +1,4 @@
-package org.acme;
+package com.st;
 
 import java.util.Date;
 

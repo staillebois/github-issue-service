@@ -1,4 +1,4 @@
-package org.acme;
+package com.st;
 
 public class IssueRequest {
     public String repository;

@@ -1,4 +1,4 @@
-package org.acme;
+package com.st;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;

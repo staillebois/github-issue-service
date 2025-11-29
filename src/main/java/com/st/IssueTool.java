@@ -1,4 +1,4 @@
-package org.acme;
+package com.st;
 
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
